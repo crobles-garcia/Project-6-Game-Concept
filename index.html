@@ -5,16 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Water Quest</title>
   <style>
+    .cloud {
+      position: absolute;
+      top: 0;
+      opacity: 0.95;
+      pointer-events: none;
+      z-index: 2;
+      filter: brightness(100%);
+    }
+    .cloud.left {
+      left: 10px;
+      width: 80px;
+    }
+    .cloud.right {
+      right: 10px;
+      width: 100px;
+    }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f0f4f8;
+      background: url('https://cdn.pixabay.com/photo/2017/10/18/21/04/africa-2869266_1280.jpg') no-repeat center center fixed;
+      background-size: cover;
       color: #333;
       text-align: center;
     }
     header {
-      background-color: #f9f9f9;
+      background-color: rgba(255, 255, 255, 0.9);
       padding: 20px;
       border-bottom: 2px solid #ddd;
     }
@@ -27,14 +45,15 @@
       font-size: 1.2em;
       margin: 10px 0;
     }
-    .instructions {
-      font-size: 0.95em;
-      margin: 15px;
-      background-color: #fff3cd;
+    .message {
+      font-size: 1em;
+      margin: 20px auto;
       padding: 10px;
-      border-left: 5px solid #ffeeba;
-      display: inline-block;
-      text-align: left;
+      background-color: #e6f7ff;
+      border-left: 5px solid #91d5ff;
+      display: block;
+      min-height: 40px;
+      max-width: 500px;
     }
     .btn {
       display: inline-block;
@@ -59,41 +78,58 @@
       padding: 10px;
       border: 2px solid #ccc;
       border-radius: 8px;
+      background-color: rgba(255,255,255,0.8);
     }
     .game-screen {
       display: none;
       position: relative;
-      height: 400px;
-      background-color: #d0e8f2;
+      width: 350px;
+      height: 300px;
+      margin: 20px auto;
+      background-color: rgba(208,232,242,0.95);
+      border-radius: 12px;
       overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
     .player {
-      width: 30px;
+      width: 40px;
       height: 30px;
-      background-color: #333;
+      background-color: #444;
       position: absolute;
       bottom: 0;
       left: 10px;
-    }
-    .obstacle,
-    .water-drop {
-      position: absolute;
-      bottom: 0;
-    }
-    .obstacle {
-      width: 40px;
-      height: 40px;
-      background-color: #a33;
+      border-radius: 0 0 10px 10px;
     }
     .water-drop {
       width: 20px;
       height: 30px;
       background-color: #00f;
       border-radius: 50%;
+      position: absolute;
+      top: 0;
+    }
+    .instructions {
+      font-size: 1em;
+      margin: 20px auto;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 15px;
+      border-left: 5px solid #ffe58f;
+      max-width: 500px;
+    }
+    .scoreboard {
+      margin: 10px auto;
+      font-size: 1.1em;
+      font-weight: bold;
+      background: #fff;
+      padding: 5px 15px;
+      border-radius: 8px;
+      max-width: 300px;
     }
     footer {
       margin-top: 20px;
       font-size: 0.9em;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 10px;
     }
   </style>
 </head>
@@ -103,130 +139,33 @@
     <div class="subtitle">The Journey to Clean Water</div>
     <button class="btn" onclick="startGame()">Start</button>
     <button class="btn" onclick="alert('Learn more at charitywater.org')">About the Mission</button>
-    <div style="font-size: 0.8em; margin-top: 10px;">Inspired by charity: water</div>
+    <div style="font-size: 0.8em; margin-top: 10px;"><strong>Inspired by charity: water</strong></div>
   </header>
 
-  <div class="instructions">
-    <strong>How to Play:</strong><br>
-    • Press "Start" to begin the game<br>
-    • Use the <strong>Left (←)</strong> and <strong>Right (→)</strong> arrow keys to move the player<br>
-    • Collect the blue water drops to gain points<br>
-    • You have 30 seconds to collect as much water as you can!
-  </div>
+  <div id="messageBox" class="message">Welcome to Water Quest! Catch falling water with your bucket.</div>
 
-  <div class="upgrades">
-    <div class="upgrade-box">✔ New Well</div>
-    <div class="upgrade-box">✔ Water Filter</div>
-    <div class="upgrade-box">✔ Sanitation Station</div>
-  </div>
-
-  <div class="game-screen" id="gameScreen">
+  <div id="gameScreen" class="game-screen">
+    <img src="https://cdn-icons-png.flaticon.com/512/414/414927.png" alt="clouds" class="cloud left">
+    <img src="https://cdn-icons-png.flaticon.com/512/414/414927.png" alt="clouds" class="cloud right">
     <div id="player" class="player"></div>
   </div>
 
+  <div id="statusBar" class="scoreboard">Time: 30 | Score: 0</div>
+
+  <div class="instructions">
+    <strong>How to Play:</strong>
+    <ul style="text-align: left; max-width: 480px; margin: 10px auto;">
+      <li>Press "Start" to begin the game</li>
+      <li>Use the <strong>Left (←)</strong> and <strong>Right (→)</strong> arrow keys to move the bucket</li>
+      <li>Catch falling water drops to gain points</li>
+      <li>You have 30 seconds to collect as much water as you can!</li>
+    </ul>
+  </div>
+
+  <audio id="catchSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_4c0f69779d.mp3"></audio>
+
   <footer>
-    <div>“1 in 10 people lack access to clean water...”</div>
+    “1 in 10 people lack access to clean water...”
   </footer>
-
-  <script>
-    let score = 0;
-    let player;
-    let scoreDisplay;
-    let timerDisplay;
-    let timer;
-    let timeLeft = 30;
-
-    function startGame() {
-      document.getElementById('gameScreen').innerHTML = '<div id="player" class="player"></div>';
-      document.getElementById('gameScreen').style.display = 'block';
-      player = document.getElementById('player');
-
-      score = 0;
-      timeLeft = 30;
-
-      // Add score display
-      scoreDisplay = document.createElement('div');
-      scoreDisplay.style.position = 'absolute';
-      scoreDisplay.style.top = '10px';
-      scoreDisplay.style.right = '10px';
-      scoreDisplay.style.fontSize = '1.2em';
-      scoreDisplay.style.backgroundColor = '#fff';
-      scoreDisplay.style.padding = '5px 10px';
-      scoreDisplay.style.borderRadius = '8px';
-      scoreDisplay.innerText = `Score: ${score}`;
-      document.getElementById('gameScreen').appendChild(scoreDisplay);
-
-      // Add timer display
-      timerDisplay = document.createElement('div');
-      timerDisplay.style.position = 'absolute';
-      timerDisplay.style.top = '10px';
-      timerDisplay.style.left = '10px';
-      timerDisplay.style.fontSize = '1.2em';
-      timerDisplay.style.backgroundColor = '#fff';
-      timerDisplay.style.padding = '5px 10px';
-      timerDisplay.style.borderRadius = '8px';
-      timerDisplay.innerText = `Time: ${timeLeft}`;
-      document.getElementById('gameScreen').appendChild(timerDisplay);
-
-      document.addEventListener('keydown', movePlayer);
-      timer = setInterval(updateTimer, 1000);
-      spawnWaterDrop();
-    }
-
-    function updateTimer() {
-      timeLeft--;
-      timerDisplay.innerText = `Time: ${timeLeft}`;
-
-      if (timeLeft <= 0) {
-        clearInterval(timer);
-        document.removeEventListener('keydown', movePlayer);
-        alert(`Time's up! Your final score is: ${score}`);
-      }
-    }
-
-    function movePlayer(e) {
-      const left = parseInt(window.getComputedStyle(player).left);
-      if (e.key === 'ArrowRight' && left < 370) {
-        player.style.left = left + 10 + 'px';
-      } else if (e.key === 'ArrowLeft' && left > 0) {
-        player.style.left = left - 10 + 'px';
-      }
-
-      checkCollision();
-    }
-
-    function spawnWaterDrop() {
-      const water = document.createElement('div');
-      water.className = 'water-drop';
-      water.style.left = Math.floor(Math.random() * 360) + 'px';
-      document.getElementById('gameScreen').appendChild(water);
-      setInterval(() => {
-        if (timeLeft > 0) {
-          water.style.left = Math.floor(Math.random() * 360) + 'px';
-        }
-      }, 2000);
-    }
-
-    function checkCollision() {
-      const playerRect = player.getBoundingClientRect();
-      const drops = document.querySelectorAll('.water-drop');
-
-      drops.forEach(drop => {
-        const dropRect = drop.getBoundingClientRect();
-        if (
-          playerRect.left < dropRect.right &&
-          playerRect.right > dropRect.left &&
-          playerRect.top < dropRect.bottom &&
-          playerRect.bottom > dropRect.top
-        ) {
-          score += 10;
-          scoreDisplay.innerText = `Score: ${score}`;
-          drop.remove();
-          spawnWaterDrop();
-        }
-      });
-    }
-  </script>
 </body>
 </html>
-

@@ -1,29 +1,53 @@
+.cloud {
+  position: absolute;
+  top: 0;
+  opacity: 0.95;
+  pointer-events: none;
+  z-index: 2;
+  filter: brightness(100%);
+}
+.cloud.left {
+  left: 10px;
+  width: 80px;
+}
+.cloud.right {
+  right: 10px;
+  width: 100px;
+}
+
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f0f4f8;
+  background: url('https://cdn.pixabay.com/photo/2017/10/18/21/04/africa-2869266_1280.jpg') no-repeat center center fixed;
+  background-size: cover;
   color: #333;
   text-align: center;
 }
-
 header {
-  background-color: #f9f9f9;
+  background-color: rgba(255, 255, 255, 0.9);
   padding: 20px;
   border-bottom: 2px solid #ddd;
 }
-
 .logo {
   font-size: 2em;
   font-weight: bold;
-  color: #f9c70b; /* charity: water yellow */
+  color: #f9c70b;
 }
-
 .subtitle {
   font-size: 1.2em;
   margin: 10px 0;
 }
-
+.message {
+  font-size: 1em;
+  margin: 20px auto;
+  padding: 10px;
+  background-color: #e6f7ff;
+  border-left: 5px solid #91d5ff;
+  display: block;
+  min-height: 40px;
+  max-width: 500px;
+}
 .btn {
   display: inline-block;
   margin: 10px;
@@ -35,60 +59,68 @@ header {
   border-radius: 5px;
   cursor: pointer;
 }
-
 .btn:hover {
   background-color: #e8b309;
 }
-
 .upgrades {
   margin: 20px;
 }
-
 .upgrade-box {
   display: inline-block;
   margin: 10px;
   padding: 10px;
   border: 2px solid #ccc;
   border-radius: 8px;
+  background-color: rgba(255,255,255,0.8);
 }
-
 .game-screen {
   display: none;
   position: relative;
-  height: 400px;
-  background-color: #d0e8f2;
+  width: 350px;
+  height: 300px;
+  margin: 20px auto;
+  background-color: rgba(208,232,242,0.95);
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
-
 .player {
-  width: 30px;
+  width: 40px;
   height: 30px;
-  background-color: #333;
+  background-color: #444;
   position: absolute;
   bottom: 0;
   left: 10px;
+  border-radius: 0 0 10px 10px;
 }
-
-.obstacle,
-.water-drop {
-  position: absolute;
-  bottom: 0;
-}
-
-.obstacle {
-  width: 40px;
-  height: 40px;
-  background-color: #a33;
-}
-
 .water-drop {
   width: 20px;
   height: 30px;
   background-color: #00f;
   border-radius: 50%;
+  position: absolute;
+  top: 0;
 }
-
+.instructions {
+  font-size: 1em;
+  margin: 20px auto;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  border-left: 5px solid #ffe58f;
+  max-width: 500px;
+}
+.scoreboard {
+  margin: 10px auto;
+  font-size: 1.1em;
+  font-weight: bold;
+  background: #fff;
+  padding: 5px 15px;
+  border-radius: 8px;
+  max-width: 300px;
+}
 footer {
   margin-top: 20px;
   font-size: 0.9em;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px;
 }
