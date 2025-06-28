@@ -42,7 +42,9 @@ function movePlayer(e) {
 // Spawn a water drop
 function spawnDrop() {
   const drop = document.createElement('div');
-  drop.className = 'water-drop';
+  // Randomly decide if this is a good or bad drop
+  const isBad = Math.random() < 0.2; // 20% chance for a bad drop
+  drop.className = isBad ? 'water-drop bad-drop' : 'water-drop';
   drop.style.left = Math.floor(Math.random() * 330) + "px";
   drop.style.top = "0px";
   gameScreen.appendChild(drop);
@@ -56,10 +58,16 @@ function spawnDrop() {
       const dropLeft = parseInt(drop.style.left);
       const playerLeft = parseInt(player.style.left);
       if (dropLeft > playerLeft - 20 && dropLeft < playerLeft + 40) {
-        score++;
+        if (isBad) {
+          score -= 10;
+          messageBox.textContent = "Oh no! Bad water drop!";
+        } else {
+          score++;
+          messageBox.textContent = "Nice catch!";
+          catchSound.currentTime = 0;
+          catchSound.play();
+        }
         updateStatus();
-        catchSound.currentTime = 0;
-        catchSound.play();
         drop.remove();
         clearInterval(fallInterval);
       }
@@ -145,7 +153,9 @@ window.onload = function() {
 
   function spawnDrop() {
     const drop = document.createElement('div');
-    drop.className = 'water-drop';
+    // Randomly decide if this is a good or bad drop
+    const isBad = Math.random() < 0.2; // 20% chance for a bad drop
+    drop.className = isBad ? 'water-drop bad-drop' : 'water-drop';
     drop.style.left = Math.floor(Math.random() * 330) + "px";
     drop.style.top = "0px";
     gameScreen.appendChild(drop);
@@ -154,18 +164,26 @@ window.onload = function() {
       let top = parseInt(drop.style.top);
       drop.style.top = (top + 5) + "px";
 
+      // Collision with player
       if (top > 240) {
         const dropLeft = parseInt(drop.style.left);
         const playerLeft = parseInt(player.style.left);
         if (dropLeft > playerLeft - 20 && dropLeft < playerLeft + 40) {
-          score++;
+          if (isBad) {
+            score -= 10;
+            messageBox.textContent = "Oh no! Bad water drop!";
+          } else {
+            score++;
+            messageBox.textContent = "Nice catch!";
+            catchSound.currentTime = 0;
+            catchSound.play();
+          }
           updateStatus();
-          catchSound.currentTime = 0;
-          catchSound.play();
           drop.remove();
           clearInterval(fallInterval);
         }
       }
+      // Missed drop
       if (top > 270) {
         drop.remove();
         clearInterval(fallInterval);
