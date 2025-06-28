@@ -122,8 +122,6 @@
 
   <div class="game-screen" id="gameScreen">
     <div id="player" class="player"></div>
-    <div id="water" class="water-drop" style="left: 80%;"></div>
-    <div id="obstacle" class="obstacle" style="left: 60%;"></div>
   </div>
 
   <footer>
@@ -133,16 +131,15 @@
   <script>
     let score = 0;
     let player;
-    let water;
     let scoreDisplay;
     let timerDisplay;
     let timer;
     let timeLeft = 30;
 
     function startGame() {
+      document.getElementById('gameScreen').innerHTML = '<div id="player" class="player"></div>';
       document.getElementById('gameScreen').style.display = 'block';
       player = document.getElementById('player');
-      water = document.getElementById('water');
 
       score = 0;
       timeLeft = 30;
@@ -173,6 +170,7 @@
 
       document.addEventListener('keydown', movePlayer);
       timer = setInterval(updateTimer, 1000);
+      spawnWaterDrop();
     }
 
     function updateTimer() {
@@ -197,21 +195,36 @@
       checkCollision();
     }
 
+    function spawnWaterDrop() {
+      const water = document.createElement('div');
+      water.className = 'water-drop';
+      water.style.left = Math.floor(Math.random() * 360) + 'px';
+      document.getElementById('gameScreen').appendChild(water);
+      setInterval(() => {
+        if (timeLeft > 0) {
+          water.style.left = Math.floor(Math.random() * 360) + 'px';
+        }
+      }, 2000);
+    }
+
     function checkCollision() {
       const playerRect = player.getBoundingClientRect();
-      const waterRect = water.getBoundingClientRect();
+      const drops = document.querySelectorAll('.water-drop');
 
-      if (
-        playerRect.left < waterRect.right &&
-        playerRect.right > waterRect.left &&
-        playerRect.top < waterRect.bottom &&
-        playerRect.bottom > waterRect.top
-      ) {
-        score += 10;
-        scoreDisplay.innerText = `Score: ${score}`;
-        const newLeft = Math.floor(Math.random() * 360) + 'px';
-        water.style.left = newLeft;
-      }
+      drops.forEach(drop => {
+        const dropRect = drop.getBoundingClientRect();
+        if (
+          playerRect.left < dropRect.right &&
+          playerRect.right > dropRect.left &&
+          playerRect.top < dropRect.bottom &&
+          playerRect.bottom > dropRect.top
+        ) {
+          score += 10;
+          scoreDisplay.innerText = `Score: ${score}`;
+          drop.remove();
+          spawnWaterDrop();
+        }
+      });
     }
   </script>
 </body>
