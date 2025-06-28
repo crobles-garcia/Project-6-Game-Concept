@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Water Quest</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f4f8;
+      color: #333;
+      text-align: center;
+    }
+    header {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-bottom: 2px solid #ddd;
+    }
+    .logo {
+      font-size: 2em;
+      font-weight: bold;
+      color: #f9c70b; /* charity: water yellow */
+    }
+    .subtitle {
+      font-size: 1.2em;
+      margin: 10px 0;
+    }
+    .btn {
+      display: inline-block;
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #f9c70b;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #e8b309;
+    }
+    .upgrades {
+      margin: 20px;
+    }
+    .upgrade-box {
+      display: inline-block;
+      margin: 10px;
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+    }
+    .game-screen {
+      display: none;
+      position: relative;
+      height: 400px;
+      background-color: #d0e8f2;
+      overflow: hidden;
+    }
+    .player {
+      width: 30px;
+      height: 30px;
+      background-color: #333;
+      position: absolute;
+      bottom: 0;
+      left: 10px;
+    }
+    .obstacle, .water-drop {
+      position: absolute;
+      bottom: 0;
+    }
+    .obstacle {
+      width: 40px;
+      height: 40px;
+      background-color: #a33;
+    }
+    .water-drop {
+      width: 20px;
+      height: 30px;
+      background-color: #00f;
+      border-radius: 50%;
+    }
+    footer {
+      margin-top: 20px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">❁ WATER QUEST
+    </div>
+    <div class="subtitle">The Journey to Clean Water</div>
+    <button class="btn" onclick="startGame()">Start</button>
+    <button class="btn" onclick="alert('Learn more at charitywater.org')">About the Mission</button>
+    <div style="font-size: 0.8em; margin-top: 10px;">Inspired by charity: water</div>
+  </header>
+
+  <div class="upgrades">
+    <div class="upgrade-box">
+      ✔ New Well
+    </div>
+    <div class="upgrade-box">
+      ✔ Water Filter
+    </div>
+    <div class="upgrade-box">
+      ✔ Sanitation Station
+    </div>
+  </div>
+
+  <div class="game-screen" id="gameScreen">
+    <div id="player" class="player"></div>
+    <div id="water" class="water-drop" style="left: 80%;"></div>
+    <div id="obstacle" class="obstacle" style="left: 60%;"></div>
+  </div>
+
+  <footer>
+    <div>“1 in 10 people lack access to clean water...”</div>
+  </footer>
+
+  <script>
+    function startGame() {
+      document.getElementById('gameScreen').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
