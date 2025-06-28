@@ -60,10 +60,10 @@ function spawnDrop() {
       if (dropLeft > playerLeft - 20 && dropLeft < playerLeft + 40) {
         if (isBad) {
           score -= 10;
-          messageBox.textContent = "Oh no! Bad water drop!";
+          messageBox.textContent = "Oh no! Bad water drop! -10";
         } else {
-          score++;
-          messageBox.textContent = "Nice catch!";
+          score += 10;
+          messageBox.textContent = "Nice catch! +10";
           catchSound.currentTime = 0;
           catchSound.play();
         }
@@ -171,10 +171,10 @@ window.onload = function() {
         if (dropLeft > playerLeft - 20 && dropLeft < playerLeft + 40) {
           if (isBad) {
             score -= 10;
-            messageBox.textContent = "Oh no! Bad water drop!";
+            messageBox.textContent = "Oh no! Bad water drop! -10";
           } else {
-            score++;
-            messageBox.textContent = "Nice catch!";
+            score += 10;
+            messageBox.textContent = "Nice catch! +10";
             catchSound.currentTime = 0;
             catchSound.play();
           }
@@ -217,4 +217,13 @@ window.onload = function() {
 
   // Expose startGame globally so the button works
   window.startGame = startGame;
+
+  // Touch controls
+  const leftBtn = document.getElementById('leftBtn');
+  const rightBtn = document.getElementById('rightBtn');
+
+  if (leftBtn && rightBtn) {
+    leftBtn.addEventListener('touchstart', () => movePlayer({ key: "ArrowLeft" }));
+    rightBtn.addEventListener('touchstart', () => movePlayer({ key: "ArrowRight" }));
+  }
 };

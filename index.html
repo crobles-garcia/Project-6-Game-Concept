@@ -20,6 +20,9 @@
       <a href="https://www.charitywater.org/home" target="_blank" style="color: #0077cc; text-decoration: underline; margin-top: 4px;">
         Visit charity: water
       </a>
+      <span style="margin-top: 8px; font-style: italic; color: #555;">
+        “1 in 10 people lack access to clean water...”
+      </span>
     </div>
   </header>
 
@@ -31,14 +34,22 @@
     <div id="player" class="player"></div>
   </div>
 
+  <!-- Touch controls for mobile devices -->
+  <div id="touchControls" style="display: flex; justify-content: center; margin: 10px;">
+    <button class="btn" id="leftBtn" aria-label="Move Left">⬅️</button>
+    <button class="btn" id="rightBtn" aria-label="Move Right">➡️</button>
+  </div>
+
   <div id="statusBar" class="scoreboard">Time: 30 | Score: 0</div>
 
   <div class="instructions">
     <strong>How to Play:</strong>
     <ul style="text-align: left; max-width: 480px; margin: 10px auto;">
-      <li>Press "Start" to begin the game</li>
-      <li>Use the <strong>Left (←)</strong> and <strong>Right (→)</strong> arrow keys to move the bucket</li>
-      <li>Catch falling water drops to gain points</li>
+      <li>Press <strong>Start</strong> to begin the game</li>
+      <li>Use the <strong>Left (←)</strong> and <strong>Right (→)</strong> arrow keys to move the bucket on desktop</li>
+      <li>On touch devices, tap the <strong>⬅️</strong> and <strong>➡️</strong> buttons to move the bucket</li>
+      <li>Catch blue water drops to gain <strong>+10</strong> points</li>
+      <li>Avoid green drops! They deduct <strong>10</strong> points</li>
       <li>You have 30 seconds to collect as much water as you can!</li>
     </ul>
   </div>
@@ -46,7 +57,6 @@
   <audio id="catchSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_4c0f69779d.mp3"></audio>
 
   <footer>
-    “1 in 10 people lack access to clean water...”
   </footer>
   <script src="script.js"></script>
 </body>
