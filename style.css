@@ -76,8 +76,12 @@ header {
 .game-screen {
   display: none;
   position: relative;
-  width: 350px;
-  height: 300px;
+  width: 90vw;
+  max-width: 350px;
+  height: 60vw;
+  max-height: 300px;
+  min-width: 220px;
+  min-height: 180px;
   margin: 20px auto;
   background-color: rgba(208,232,242,0.95);
   border-radius: 12px;
@@ -85,8 +89,10 @@ header {
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 .player {
-  width: 40px;
-  height: 30px;
+  width: 12vw;
+  max-width: 40px;
+  height: 9vw;
+  max-height: 30px;
   background-color: #444;
   position: absolute;
   bottom: 0;
@@ -94,8 +100,10 @@ header {
   border-radius: 0 0 10px 10px;
 }
 .water-drop {
-  width: 20px;
-  height: 30px;
+  width: 6vw;
+  max-width: 20px;
+  height: 9vw;
+  max-height: 30px;
   background-color: #00f;
   border-radius: 50%;
   position: absolute;
@@ -130,6 +138,11 @@ footer {
 }
 #touchControls {
   display: none;
+}
+#touchControls .btn {
+  font-size: 2em;
+  padding: 16px 28px;
+  margin: 0 12px;
 }
 @media (pointer: coarse) {
   #touchControls {

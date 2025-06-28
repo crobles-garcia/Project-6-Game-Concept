@@ -30,34 +30,39 @@ function startGame() {
 
 // Move player left/right
 function movePlayer(e) {
+  const gameWidth = gameScreen.offsetWidth;
+  const playerWidth = player.offsetWidth;
   const left = parseInt(player.style.left) || 0;
   if (e.key === "ArrowLeft" && left > 0) {
-    player.style.left = (left - 20) + "px";
+    player.style.left = Math.max(0, left - 0.06 * gameWidth) + "px";
   }
-  if (e.key === "ArrowRight" && left < 310) {
-    player.style.left = (left + 20) + "px";
+  if (e.key === "ArrowRight" && left < gameWidth - playerWidth) {
+    player.style.left = Math.min(gameWidth - playerWidth, left + 0.06 * gameWidth) + "px";
   }
 }
 
 // Spawn a water drop
 function spawnDrop() {
+  const gameWidth = gameScreen.offsetWidth;
   const drop = document.createElement('div');
-  // Randomly decide if this is a good or bad drop
-  const isBad = Math.random() < 0.2; // 20% chance for a bad drop
+  const isBad = Math.random() < 0.2;
   drop.className = isBad ? 'water-drop bad-drop' : 'water-drop';
-  drop.style.left = Math.floor(Math.random() * 330) + "px";
+  const dropWidth = 0.06 * gameWidth;
+  drop.style.left = Math.floor(Math.random() * (gameWidth - dropWidth)) + "px";
   drop.style.top = "0px";
   gameScreen.appendChild(drop);
 
   let fallInterval = setInterval(() => {
     let top = parseInt(drop.style.top);
-    drop.style.top = (top + 5) + "px";
+    drop.style.top = (top + 0.016 * gameScreen.offsetHeight) + "px";
 
-    // Collision with player
-    if (top > 240) {
+    if (top > gameScreen.offsetHeight - player.offsetHeight - drop.offsetHeight) {
       const dropLeft = parseInt(drop.style.left);
       const playerLeft = parseInt(player.style.left);
-      if (dropLeft > playerLeft - 20 && dropLeft < playerLeft + 40) {
+      if (
+        dropLeft + drop.offsetWidth > playerLeft &&
+        dropLeft < playerLeft + player.offsetWidth
+      ) {
         if (isBad) {
           score -= 10;
           messageBox.textContent = "Oh no! Bad water drop! -10";
@@ -72,8 +77,7 @@ function spawnDrop() {
         clearInterval(fallInterval);
       }
     }
-    // Missed drop
-    if (top > 270) {
+    if (top > gameScreen.offsetHeight) {
       drop.remove();
       clearInterval(fallInterval);
     }
@@ -142,33 +146,38 @@ window.onload = function() {
   }
 
   function movePlayer(e) {
+    const gameWidth = gameScreen.offsetWidth;
+    const playerWidth = player.offsetWidth;
     const left = parseInt(player.style.left) || 0;
     if (e.key === "ArrowLeft" && left > 0) {
-      player.style.left = (left - 20) + "px";
+      player.style.left = Math.max(0, left - 0.06 * gameWidth) + "px";
     }
-    if (e.key === "ArrowRight" && left < 310) {
-      player.style.left = (left + 20) + "px";
+    if (e.key === "ArrowRight" && left < gameWidth - playerWidth) {
+      player.style.left = Math.min(gameWidth - playerWidth, left + 0.06 * gameWidth) + "px";
     }
   }
 
   function spawnDrop() {
+    const gameWidth = gameScreen.offsetWidth;
     const drop = document.createElement('div');
-    // Randomly decide if this is a good or bad drop
-    const isBad = Math.random() < 0.2; // 20% chance for a bad drop
+    const isBad = Math.random() < 0.2;
     drop.className = isBad ? 'water-drop bad-drop' : 'water-drop';
-    drop.style.left = Math.floor(Math.random() * 330) + "px";
+    const dropWidth = 0.06 * gameWidth;
+    drop.style.left = Math.floor(Math.random() * (gameWidth - dropWidth)) + "px";
     drop.style.top = "0px";
     gameScreen.appendChild(drop);
 
     let fallInterval = setInterval(() => {
       let top = parseInt(drop.style.top);
-      drop.style.top = (top + 5) + "px";
+      drop.style.top = (top + 0.016 * gameScreen.offsetHeight) + "px";
 
-      // Collision with player
-      if (top > 240) {
+      if (top > gameScreen.offsetHeight - player.offsetHeight - drop.offsetHeight) {
         const dropLeft = parseInt(drop.style.left);
         const playerLeft = parseInt(player.style.left);
-        if (dropLeft > playerLeft - 20 && dropLeft < playerLeft + 40) {
+        if (
+          dropLeft + drop.offsetWidth > playerLeft &&
+          dropLeft < playerLeft + player.offsetWidth
+        ) {
           if (isBad) {
             score -= 10;
             messageBox.textContent = "Oh no! Bad water drop! -10";
@@ -183,8 +192,7 @@ window.onload = function() {
           clearInterval(fallInterval);
         }
       }
-      // Missed drop
-      if (top > 270) {
+      if (top > gameScreen.offsetHeight) {
         drop.remove();
         clearInterval(fallInterval);
       }
