@@ -19,10 +19,20 @@ body {
   font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
   margin: 0;
   padding: 0;
-  background: url('https://cdn.pixabay.com/photo/2017/10/18/21/04/africa-2869266_1280.jpg') no-repeat center center fixed;
-  background-size: cover;
   color: #333;
   text-align: center;
+}
+body.rural {
+  background: url('https://cdn.pixabay.com/photo/2017/10/18/21/04/africa-2869266_1280.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+body.desert {
+  background: url('https://cdn.pixabay.com/photo/2016/11/29/09/32/africa-1867634_1280.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+body.storm {
+  background: url('https://cdn.pixabay.com/photo/2016/11/29/09/08/africa-1867384_1280.jpg') no-repeat center center fixed;
+  background-size: cover;
 }
 header {
   background-color: rgba(255, 255, 255, 0.9);
@@ -148,4 +158,34 @@ footer {
   #touchControls {
     display: flex;
   }
+}
+.bonus-drop {
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 10px #ffd70088;
+}
+.golden-drop {
+  background: radial-gradient(circle, #ffe066 70%, #ffd700 100%);
+}
+.clock-drop {
+  background: radial-gradient(circle, #b3e6ff 70%, #00bfff 100%);
+  border: 2px solid #00bfff;
+}
+.purifier-drop {
+  background: radial-gradient(circle, #fff 60%, #00ffb3 100%);
+  border: 2px solid #00ffb3;
+}
+@keyframes bucket-wiggle {
+  0% { transform: rotate(0deg);}
+  20% { transform: rotate(-10deg);}
+  40% { transform: rotate(8deg);}
+  60% { transform: rotate(-6deg);}
+  80% { transform: rotate(4deg);}
+  100% { transform: rotate(0deg);}
+}
+
+.player.wiggle {
+  animation: bucket-wiggle 0.4s;
+}
+#muteBtn {
+  min-width: 90px;
 }

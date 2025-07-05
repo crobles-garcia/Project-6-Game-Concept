@@ -3,12 +3,20 @@ let score = 0;
 let timeLeft = 30;
 let dropInterval, timerInterval;
 let isPlaying = false;
+let purifierActive = false;
+let purifierTimeout = null;
 
 const player = document.getElementById('player');
 const gameScreen = document.getElementById('gameScreen');
 const statusBar = document.getElementById('statusBar');
 const messageBox = document.getElementById('messageBox');
 const catchSound = document.getElementById('catchSound');
+const bgMusic = document.getElementById('bgMusic');
+const muteBtn = document.getElementById('muteBtn');
+let isMuted = false;
+
+let currentTheme = 'rural';
+let currentDropInterval = 800;
 
 // Start the game
 function startGame() {
@@ -24,8 +32,14 @@ function startGame() {
 
   document.addEventListener('keydown', movePlayer);
 
-  dropInterval = setInterval(spawnDrop, 800);
+  setThemeAndDifficulty();
   timerInterval = setInterval(updateTimer, 1000);
+
+  // Start music if not muted
+  if (!isMuted) {
+    bgMusic.volume = 0.5;
+    bgMusic.play();
+  }
 }
 
 // Move player left/right
@@ -45,8 +59,30 @@ function movePlayer(e) {
 function spawnDrop() {
   const gameWidth = gameScreen.offsetWidth;
   const drop = document.createElement('div');
-  const isBad = Math.random() < 0.2;
-  drop.className = isBad ? 'water-drop bad-drop' : 'water-drop';
+  let dropType = 'normal';
+
+  // Decide drop type
+  const rand = Math.random();
+  if (rand < 0.08) {
+    // 8% chance for a bonus drop
+    const bonusRand = Math.random();
+    if (bonusRand < 0.33) {
+      dropType = 'golden';
+      drop.className = 'water-drop bonus-drop golden-drop';
+    } else if (bonusRand < 0.66) {
+      dropType = 'clock';
+      drop.className = 'water-drop bonus-drop clock-drop';
+    } else {
+      dropType = 'purifier';
+      drop.className = 'water-drop bonus-drop purifier-drop';
+    }
+  } else if (rand < 0.28) {
+    dropType = 'bad';
+    drop.className = 'water-drop bad-drop';
+  } else {
+    drop.className = 'water-drop';
+  }
+
   const dropWidth = 0.06 * gameWidth;
   drop.style.left = Math.floor(Math.random() * (gameWidth - dropWidth)) + "px";
   drop.style.top = "0px";
@@ -63,18 +99,35 @@ function spawnDrop() {
         dropLeft + drop.offsetWidth > playerLeft &&
         dropLeft < playerLeft + player.offsetWidth
       ) {
-        if (isBad) {
+        // Collision detected
+        player.classList.remove('wiggle'); // reset if already animating
+        void player.offsetWidth; // force reflow for restart
+        player.classList.add('wiggle');
+
+        if (dropType === 'bad') {
           score -= 10;
           messageBox.textContent = "Oh no! Bad water drop! -10";
+        } else if (dropType === 'golden') {
+          score += purifierActive ? 100 : 50;
+          messageBox.textContent = "Golden Drop! +" + (purifierActive ? "100" : "50");
+        } else if (dropType === 'clock') {
+          timeLeft += 5;
+          messageBox.textContent = "Clock Drop! +5s";
+        } else if (dropType === 'purifier') {
+          activatePurifier();
+          messageBox.textContent = "Purifier! Double points for 5s!";
         } else {
-          score += 10;
-          messageBox.textContent = "Nice catch! +10";
+          score += purifierActive ? 20 : 10;
+          messageBox.textContent = "Nice catch! +" + (purifierActive ? "20" : "10");
           catchSound.currentTime = 0;
           catchSound.play();
         }
         updateStatus();
         drop.remove();
         clearInterval(fallInterval);
+
+        // Remove wiggle class after animation
+        setTimeout(() => player.classList.remove('wiggle'), 400);
       }
     }
     if (top > gameScreen.offsetHeight) {
@@ -84,9 +137,41 @@ function spawnDrop() {
   }, 20);
 }
 
+function activatePurifier() {
+  purifierActive = true;
+  if (purifierTimeout) clearTimeout(purifierTimeout);
+  purifierTimeout = setTimeout(() => {
+    purifierActive = false;
+    messageBox.textContent = "Purifier ended!";
+  }, 5000);
+}
+
+function setThemeAndDifficulty() {
+  if (timeLeft > 20) {
+    document.body.classList.add('rural');
+    document.body.classList.remove('desert', 'storm');
+    currentTheme = 'rural';
+    currentDropInterval = 800; // easy
+  } else if (timeLeft > 10) {
+    document.body.classList.add('desert');
+    document.body.classList.remove('rural', 'storm');
+    currentTheme = 'desert';
+    currentDropInterval = 600; // medium
+  } else {
+    document.body.classList.add('storm');
+    document.body.classList.remove('rural', 'desert');
+    currentTheme = 'storm';
+    currentDropInterval = 400; // hard/fast
+  }
+  // Restart drop interval with new speed
+  clearInterval(dropInterval);
+  dropInterval = setInterval(spawnDrop, currentDropInterval);
+}
+
 // Update timer and end game if time is up
 function updateTimer() {
   timeLeft--;
+  setThemeAndDifficulty();
   updateStatus();
   if (timeLeft <= 0) {
     endGame();
@@ -105,6 +190,8 @@ function endGame() {
   clearInterval(timerInterval);
   document.removeEventListener('keydown', movePlayer);
   messageBox.textContent = `Game Over! You scored ${score} points.`;
+  bgMusic.pause();
+  bgMusic.currentTime = 0;
 }
 
 // Remove all drops
@@ -121,12 +208,20 @@ window.onload = function() {
   let timeLeft = 30;
   let dropInterval, timerInterval;
   let isPlaying = false;
+  let purifierActive = false;
+  let purifierTimeout = null;
 
   const player = document.getElementById('player');
   const gameScreen = document.getElementById('gameScreen');
   const statusBar = document.getElementById('statusBar');
   const messageBox = document.getElementById('messageBox');
   const catchSound = document.getElementById('catchSound');
+  const bgMusic = document.getElementById('bgMusic');
+  const muteBtn = document.getElementById('muteBtn');
+  let isMuted = false;
+
+  let currentTheme = 'rural';
+  let currentDropInterval = 800;
 
   function startGame() {
     if (isPlaying) return;
@@ -141,8 +236,14 @@ window.onload = function() {
 
     document.addEventListener('keydown', movePlayer);
 
-    dropInterval = setInterval(spawnDrop, 800);
+    setThemeAndDifficulty();
     timerInterval = setInterval(updateTimer, 1000);
+
+    // Start music if not muted
+    if (!isMuted) {
+      bgMusic.volume = 0.5;
+      bgMusic.play();
+    }
   }
 
   function movePlayer(e) {
@@ -160,8 +261,30 @@ window.onload = function() {
   function spawnDrop() {
     const gameWidth = gameScreen.offsetWidth;
     const drop = document.createElement('div');
-    const isBad = Math.random() < 0.2;
-    drop.className = isBad ? 'water-drop bad-drop' : 'water-drop';
+    let dropType = 'normal';
+
+    // Decide drop type
+    const rand = Math.random();
+    if (rand < 0.08) {
+      // 8% chance for a bonus drop
+      const bonusRand = Math.random();
+      if (bonusRand < 0.33) {
+        dropType = 'golden';
+        drop.className = 'water-drop bonus-drop golden-drop';
+      } else if (bonusRand < 0.66) {
+        dropType = 'clock';
+        drop.className = 'water-drop bonus-drop clock-drop';
+      } else {
+        dropType = 'purifier';
+        drop.className = 'water-drop bonus-drop purifier-drop';
+      }
+    } else if (rand < 0.28) {
+      dropType = 'bad';
+      drop.className = 'water-drop bad-drop';
+    } else {
+      drop.className = 'water-drop';
+    }
+
     const dropWidth = 0.06 * gameWidth;
     drop.style.left = Math.floor(Math.random() * (gameWidth - dropWidth)) + "px";
     drop.style.top = "0px";
@@ -178,18 +301,35 @@ window.onload = function() {
           dropLeft + drop.offsetWidth > playerLeft &&
           dropLeft < playerLeft + player.offsetWidth
         ) {
-          if (isBad) {
+          // Collision detected
+          player.classList.remove('wiggle'); // reset if already animating
+          void player.offsetWidth; // force reflow for restart
+          player.classList.add('wiggle');
+
+          if (dropType === 'bad') {
             score -= 10;
             messageBox.textContent = "Oh no! Bad water drop! -10";
+          } else if (dropType === 'golden') {
+            score += purifierActive ? 100 : 50;
+            messageBox.textContent = "Golden Drop! +" + (purifierActive ? "100" : "50");
+          } else if (dropType === 'clock') {
+            timeLeft += 5;
+            messageBox.textContent = "Clock Drop! +5s";
+          } else if (dropType === 'purifier') {
+            activatePurifier();
+            messageBox.textContent = "Purifier! Double points for 5s!";
           } else {
-            score += 10;
-            messageBox.textContent = "Nice catch! +10";
+            score += purifierActive ? 20 : 10;
+            messageBox.textContent = "Nice catch! +" + (purifierActive ? "20" : "10");
             catchSound.currentTime = 0;
             catchSound.play();
           }
           updateStatus();
           drop.remove();
           clearInterval(fallInterval);
+
+          // Remove wiggle class after animation
+          setTimeout(() => player.classList.remove('wiggle'), 400);
         }
       }
       if (top > gameScreen.offsetHeight) {
@@ -199,8 +339,40 @@ window.onload = function() {
     }, 20);
   }
 
+  function activatePurifier() {
+    purifierActive = true;
+    if (purifierTimeout) clearTimeout(purifierTimeout);
+    purifierTimeout = setTimeout(() => {
+      purifierActive = false;
+      messageBox.textContent = "Purifier ended!";
+    }, 5000);
+  }
+
+  function setThemeAndDifficulty() {
+    if (timeLeft > 20) {
+      document.body.classList.add('rural');
+      document.body.classList.remove('desert', 'storm');
+      currentTheme = 'rural';
+      currentDropInterval = 800; // easy
+    } else if (timeLeft > 10) {
+      document.body.classList.add('desert');
+      document.body.classList.remove('rural', 'storm');
+      currentTheme = 'desert';
+      currentDropInterval = 600; // medium
+    } else {
+      document.body.classList.add('storm');
+      document.body.classList.remove('rural', 'desert');
+      currentTheme = 'storm';
+      currentDropInterval = 400; // hard/fast
+    }
+    // Restart drop interval with new speed
+    clearInterval(dropInterval);
+    dropInterval = setInterval(spawnDrop, currentDropInterval);
+  }
+
   function updateTimer() {
     timeLeft--;
+    setThemeAndDifficulty();
     updateStatus();
     if (timeLeft <= 0) {
       endGame();
@@ -217,6 +389,8 @@ window.onload = function() {
     clearInterval(timerInterval);
     document.removeEventListener('keydown', movePlayer);
     messageBox.textContent = `Game Over! You scored ${score} points.`;
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
   }
 
   function clearDrops() {
@@ -226,12 +400,31 @@ window.onload = function() {
   // Expose startGame globally so the button works
   window.startGame = startGame;
 
-  // Touch controls
+  // Touch controls and mute logic
   const leftBtn = document.getElementById('leftBtn');
   const rightBtn = document.getElementById('rightBtn');
-
   if (leftBtn && rightBtn) {
-    leftBtn.addEventListener('touchstart', () => movePlayer({ key: "ArrowLeft" }));
-    rightBtn.addEventListener('touchstart', () => movePlayer({ key: "ArrowRight" }));
+    leftBtn.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      const event = new KeyboardEvent('keydown', {key: 'ArrowLeft'});
+      movePlayer(event);
+    });
+    rightBtn.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      const event = new KeyboardEvent('keydown', {key: 'ArrowRight'});
+      movePlayer(event);
+    });
+  }
+
+  // Mute/unmute logic
+  if (muteBtn && bgMusic) {
+    muteBtn.addEventListener('click', () => {
+      isMuted = !isMuted;
+      bgMusic.muted = isMuted;
+      muteBtn.textContent = isMuted ? '🔇 Unmute' : '🔊 Mute';
+      if (!isMuted && isPlaying) {
+        bgMusic.play();
+      }
+    });
   }
 };
