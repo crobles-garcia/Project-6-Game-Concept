@@ -198,6 +198,15 @@ function endGame() {
   messageBox.textContent = `Game Over! You scored ${score} points.`;
   bgMusic.pause();
   bgMusic.currentTime = 0;
+
+  // Confetti celebration!
+  if (window.confetti) {
+    confetti({
+      particleCount: 120,
+      spread: 80,
+      origin: { y: 0.6 }
+    });
+  }
 }
 
 // Remove all drops
