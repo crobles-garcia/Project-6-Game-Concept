@@ -16,10 +16,11 @@
 }
 
 body {
+  background-color: #FFF7E1;
+  color: #1A1A1A;
   font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
   margin: 0;
   padding: 0;
-  color: #333;
   text-align: center;
 }
 body.rural {
@@ -42,7 +43,7 @@ header {
 .logo {
   font-size: 2em;
   font-weight: bold;
-  color: #f9c70b;
+  color: #FFC907; /* Brand yellow */
 }
 .subtitle {
   font-size: 1.2em;
@@ -52,8 +53,9 @@ header {
   font-size: 1em;
   margin: 20px auto;
   padding: 10px;
-  background-color: #e6f7ff;
-  border-left: 5px solid #91d5ff;
+  background-color: #FFF7E1; /* Off white */
+  border-left: 5px solid #FFC907; /* Brand yellow */
+  color: #1A1A1A; /* Brand black */
   display: block;
   min-height: 40px;
   max-width: 500px;
@@ -63,14 +65,15 @@ header {
   margin: 10px;
   padding: 10px 20px;
   font-size: 1em;
-  background-color: #f9c70b;
-  color: #000;
+  background-color: #FFC907; /* Brand yellow */
+  color: #1A1A1A; /* Brand black */
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 .btn:hover {
-  background-color: #e8b309;
+  background-color: #003366; /* Brand navy */
+  color: #FFF7E1; /* Off white for contrast */
 }
 .upgrades {
   margin: 20px;
@@ -103,7 +106,7 @@ header {
   max-width: 40px;
   height: 9vw;
   max-height: 30px;
-  background-color: #444;
+  background-color: #003366; /* Brand navy */
   position: absolute;
   bottom: 0;
   left: 10px;
@@ -114,7 +117,7 @@ header {
   max-width: 20px;
   height: 9vw;
   max-height: 30px;
-  background-color: #00f;
+  background-color: #77A8BB; /* Sky blue */
   border-radius: 50%;
   position: absolute;
   top: 0;
@@ -131,7 +134,8 @@ header {
   margin: 10px auto;
   font-size: 1.1em;
   font-weight: bold;
-  background: #fff;
+  background: #FFF7E1; /* Off white */
+  color: #003366;      /* Navy */
   padding: 5px 15px;
   border-radius: 8px;
   max-width: 300px;
@@ -139,12 +143,13 @@ header {
 footer {
   margin-top: 20px;
   font-size: 0.9em;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: #FFF7E1;
+  color: #1A1A1A;
   padding: 10px;
 }
 .water-drop.bad-drop {
-  background-color: #27ae60 !important;
-  border: 2px solid #145a32;
+  background-color: #BF6C46 !important; /* Brown */
+  border: 2px solid #FDE0C1;
 }
 #touchControls {
   display: none;
@@ -160,19 +165,19 @@ footer {
   }
 }
 .bonus-drop {
-  border: 2px solid #ffd700;
-  box-shadow: 0 0 10px #ffd70088;
+  border: 2px solid #FFC907;
+  box-shadow: 0 0 10px #FFC90788;
 }
 .golden-drop {
-  background: radial-gradient(circle, #ffe066 70%, #ffd700 100%);
+  background: radial-gradient(circle, #FFF7E1 60%, #FFC907 100%);
 }
 .clock-drop {
-  background: radial-gradient(circle, #b3e6ff 70%, #00bfff 100%);
-  border: 2px solid #00bfff;
+  background: radial-gradient(circle, #FEDBC1 70%, #77A8BB 100%);
+  border: 2px solid #77A8BB;
 }
 .purifier-drop {
-  background: radial-gradient(circle, #fff 60%, #00ffb3 100%);
-  border: 2px solid #00ffb3;
+  background: radial-gradient(circle, #FFF7E1 60%, #CBCBCD 100%);
+  border: 2px solid #CBCBCD;
 }
 @keyframes bucket-wiggle {
   0% { transform: rotate(0deg);}
